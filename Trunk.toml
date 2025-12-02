@@ -1,0 +1,2 @@
+[build]
+target = "public/index.html"
