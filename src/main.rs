@@ -72,7 +72,7 @@ fn App() -> impl IntoView {
             <div class="container page-wrapper">
                 <Routes fallback=|| view! { <h1>"Page not found"</h1> }>
                     <Route path=path!("") view=Landing/>
-                    <Route path=path!("products") view=move || view! { <Products on_add_product=handle_add_product /> }/>
+                    <Route path=path!("products") view=move || view! { <Products /> }/>
                     <Route path=path!("products/:id") view=move || view! { <ProductDetails on_add_product=handle_add_product /> }/>
                     <Route path=path!("cart") view=move || view! { <Cart cart=cart.get() user=user.get() on_add_product=handle_increment_item on_remove_product=handle_decrement_item /> }/>
                     <Route path=path!("login") view=move || view! { <Login on_user_login=handle_user_login /> }/>

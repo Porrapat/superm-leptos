@@ -9,8 +9,6 @@ pub mod login;
 pub mod profile;
 
 pub use landing::Landing;
-pub use price::Price;
-pub use product::Product;
 pub use product_details::ProductDetails;
 pub use products::Products;
 pub use navbar::Navbar;
