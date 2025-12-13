@@ -1,10 +1,26 @@
 # SuperM – Leptos (CSR)
 
-SuperM Leptos is a **client-side rendered (CSR) web application** built with **Leptos + Rust + WASM**.
+SuperM Leptos is a **client-side rendered (CSR) web application** built with **Leptos + Rust + WASM**.  
 This project is part of the *SuperM* online shopping demo, focusing on **clean UI logic, reactive state management, and modern Rust frontend architecture**.
 
-👉 Live demo:
+💡 This project is inspired by the **SuperM Final Project** from  
+https://react-tutorial.app/ by **Jad Joubran**.
+
+You can explore the original React-based example here:  
+- https://react-tutorial.app/  
+- https://superm-react.porrapat.com
+
+👉 Live demo (Leptos version):  
 https://superm-leptos.porrapat.com
+
+---
+
+## 🤝 Companion Repository
+
+This project has a companion implementation built with **React**, created to compare architecture, state management, and developer experience between **React** and **Leptos (Rust + WASM)**.
+
+- **SuperM – React version**  
+  👉 https://www.github.com/Porrapat/superm-react
 
 ---
 
@@ -38,9 +54,8 @@ https://superm-leptos.porrapat.com
 superm-leptos/
 ├── src/
 │   ├── components/
-│   ├── pages/
-│   ├── models/
-│   ├── services/
+│   ├── api.rs
+│   ├── models.rs
 │   └── main.rs
 ├── assets/
 ├── index.html
