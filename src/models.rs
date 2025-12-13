@@ -15,12 +15,6 @@ pub struct User {
     pub email: String,
 }
 
-#[derive(Serialize)]
-pub struct LoginRequest {
-    pub u_email: String,
-    pub u_password: String,
-}
-
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Nutrition {
     pub protein: f32,

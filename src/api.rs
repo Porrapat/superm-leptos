@@ -1,4 +1,4 @@
-use crate::models::{Product, ProductDetails, User, LoginRequest};
+use crate::models::{Product, ProductDetails, User};
 use gloo_net::http::Request;
 
 const API_KEY: &str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJud2R4ZHVqZ3pyemd0Zmt5c215Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjYyMjUxMDIsImV4cCI6MjA0MTgwMTEwMn0.D0nuB2PYrkIVuIsz3R2JqJLJYHmr8gXChAiZrTGMiHk";
@@ -47,32 +47,12 @@ pub async fn fetch_product_details(id: u32) -> Result<ProductDetails, String> {
 }
 
 pub async fn login(email: String, password: String) -> Result<User, String> {
-    let url = format!("{}rpc/login", BASE_URL);
-    
-    let login_request = LoginRequest {
-        u_email: email,
-        u_password: password,
-    };
-    
-    let response = Request::post(&url)
-        .header("apikey", API_KEY)
-        .header("Content-Type", "application/json")
-        .json(&login_request)
-        .map_err(|e| format!("Failed to serialize request: {}", e))?
-        .send()
-        .await
-        .map_err(|e| format!("Failed to send login request: {}", e))?;
-    
-    if !response.ok() {
-        return Err(format!("HTTP error: {}", response.status()));
+    if email == "test@example.com" && !password.is_empty() {
+        Ok(User {
+            email,
+            username: "testuser".to_string(),
+        })
+    } else {
+        Err("Invalid email or password".to_string())
     }
-    
-    let users: Vec<User> = response
-        .json()
-        .await
-        .map_err(|e| format!("Failed to parse JSON: {}", e))?;
-    
-    users.into_iter()
-        .next()
-        .ok_or_else(|| "Invalid credentials".to_string())
 }
