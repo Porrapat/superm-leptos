@@ -1,6 +1,7 @@
 use leptos::prelude::*;
 use web_sys::window;
 use crate::models::User;
+use leptos_router::hooks::use_location;
 
 #[component]
 pub fn Navbar<F, G>(user: F, cart_count: G) -> impl IntoView
@@ -24,6 +25,22 @@ where
         }
     };
 
+    let location = use_location();
+    
+    let is_active = move |path: &'static str| {
+        move || {
+            let current = location.pathname.get();
+
+            let active = if path == "/" {
+                current == "/"
+            } else {
+                current == path || current.starts_with(&format!("{}/", path))
+            };
+
+            if active { "active" } else { "" }
+        }
+    };
+
     view! {
         <div class="navbar">
             <a class="logo" href="/">
@@ -41,21 +58,21 @@ where
 
                 <ul class="nav">
                     <li class="nav-item">
-                        <a href="/">"Home"</a>
+                        <a href="/" class=is_active("/")>"Home"</a>
                     </li>
 
                     <li class="nav-item">
                         {move || {
                             if user().is_some() {
-                                view! { <a href="/profile">"Profile"</a> }
+                                view! { <a href="/profile" class=is_active("/profile")>"Profile"</a> }
                             } else {
-                                view! { <a href="/login">"Login"</a> }
+                                view! { <a href="/login" class=is_active("/login")>"Login"</a> }
                             }
                         }}
                     </li>
 
                     <li class="nav-item">
-                        <a href="/products">"Products"</a>
+                        <a href="/products" class=is_active("/products")>"Products"</a>
                     </li>
                 </ul>
 
