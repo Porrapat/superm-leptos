@@ -7,7 +7,7 @@ pub fn Price(original_price: u32, final_price: u32) -> impl IntoView {
     
     view! {
         <>
-            "${final_price_display}"
+            "$"{final_price_display}
             {move || {
                 if final_price != original_price {
                     view! {

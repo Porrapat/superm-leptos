@@ -4,7 +4,9 @@ use crate::models::Product as ProductModel;
 use crate::components::price::Price;
 
 #[component]
-pub fn Product(details: ProductModel) -> impl IntoView {
+pub fn Product(
+    details: ProductModel,
+) -> impl IntoView {
     let product_url = format!("/products/{}", details.id);
     
     view! {

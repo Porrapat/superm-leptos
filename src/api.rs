@@ -1,4 +1,4 @@
-use crate::models::Product;
+use crate::models::{Product, ProductDetails, User, LoginRequest};
 use gloo_net::http::Request;
 
 const API_KEY: &str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJud2R4ZHVqZ3pyemd0Zmt5c215Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjYyMjUxMDIsImV4cCI6MjA0MTgwMTEwMn0.D0nuB2PYrkIVuIsz3R2JqJLJYHmr8gXChAiZrTGMiHk";
@@ -21,4 +21,58 @@ pub async fn fetch_products() -> Result<Vec<Product>, String> {
         .json::<Vec<Product>>()
         .await
         .map_err(|e| format!("Failed to parse JSON: {}", e))
+}
+
+pub async fn fetch_product_details(id: u32) -> Result<ProductDetails, String> {
+    let url = format!("{}products?id=eq.{}", BASE_URL, id);
+    
+    let response = Request::get(&url)
+        .header("apikey", API_KEY)
+        .send()
+        .await
+        .map_err(|e| format!("Failed to fetch product details: {}", e))?;
+    
+    if !response.ok() {
+        return Err(format!("HTTP error: {}", response.status()));
+    }
+    
+    let products: Vec<ProductDetails> = response
+        .json()
+        .await
+        .map_err(|e| format!("Failed to parse JSON: {}", e))?;
+    
+    products.into_iter()
+        .next()
+        .ok_or_else(|| "Product not found".to_string())
+}
+
+pub async fn login(email: String, password: String) -> Result<User, String> {
+    let url = format!("{}rpc/login", BASE_URL);
+    
+    let login_request = LoginRequest {
+        u_email: email,
+        u_password: password,
+    };
+    
+    let response = Request::post(&url)
+        .header("apikey", API_KEY)
+        .header("Content-Type", "application/json")
+        .json(&login_request)
+        .map_err(|e| format!("Failed to serialize request: {}", e))?
+        .send()
+        .await
+        .map_err(|e| format!("Failed to send login request: {}", e))?;
+    
+    if !response.ok() {
+        return Err(format!("HTTP error: {}", response.status()));
+    }
+    
+    let users: Vec<User> = response
+        .json()
+        .await
+        .map_err(|e| format!("Failed to parse JSON: {}", e))?;
+    
+    users.into_iter()
+        .next()
+        .ok_or_else(|| "Invalid credentials".to_string())
 }

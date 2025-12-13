@@ -1,9 +1,12 @@
 use leptos::prelude::*;
 use crate::api::fetch_products;
 use crate::components::product::Product;
+use crate::models::Product as ProductModel;
 
 #[component]
-pub fn Products() -> impl IntoView {
+pub fn Products(
+    on_add_product: impl Fn(ProductModel) + 'static + Copy + Send,
+) -> impl IntoView {
     let products_resource = LocalResource::new(|| fetch_products());
     
     let (query, set_query) = signal(String::new());
@@ -88,6 +91,7 @@ pub fn Products() -> impl IntoView {
                                                 each=move || filtered_products.get()
                                                 key=|product| product.id
                                                 children=move |product| {
+                                                    let callback = Box::new(on_add_product) as Box<dyn Fn(ProductModel)>;
                                                     view! {
                                                         <Product details=product />
                                                     }
