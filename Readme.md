@@ -1,5 +1,7 @@
 # SuperM – Leptos (CSR)
 
+![Screenshot](./screenshot.gif)
+
 SuperM Leptos is a **client-side rendered (CSR) web application** built with **Leptos + Rust + WASM**.  
 This project is part of the *SuperM* online shopping demo, focusing on **clean UI logic, reactive state management, and modern Rust frontend architecture**.
 
