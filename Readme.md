@@ -22,6 +22,8 @@ This project has a companion implementation built with **React**, created to com
 - **SuperM – React version**  
   👉 https://www.github.com/Porrapat/superm-react
 
+- **SuperM API – Axum version**  
+  👉 https://www.github.com/Porrapat/superm-api
 ---
 
 ## ✨ Features
