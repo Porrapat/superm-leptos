@@ -1,5 +1,6 @@
 use crate::models::{Product, ProductDetails, User};
-use gloo_net::http::Request;
+use wasm_bindgen::JsCast;
+use web_sys::{Request, RequestInit, RequestMode, Response};
 
 const API_KEY: &str = "";
 const BASE_URL: &str = "https://superm-api.porrapat.com/";
@@ -7,39 +8,73 @@ const BASE_URL: &str = "https://superm-api.porrapat.com/";
 pub async fn fetch_products() -> Result<Vec<Product>, String> {
     let url = format!("{}products-list", BASE_URL);
     
-    let response = Request::get(&url)
-        .header("apikey", API_KEY)
-        .send()
-        .await
-        .map_err(|e| format!("Failed to fetch products: {}", e))?;
+    let opts = RequestInit::new();
+    opts.set_method("GET");
+    opts.set_mode(RequestMode::Cors);
     
-    if !response.ok() {
-        return Err(format!("HTTP error: {}", response.status()));
+    let request = Request::new_with_str_and_init(&url, &opts)
+        .map_err(|e| format!("Failed to create request: {:?}", e))?;
+    
+    request
+        .headers()
+        .set("apikey", API_KEY)
+        .map_err(|e| format!("Failed to set header: {:?}", e))?;
+    
+    let window = web_sys::window().ok_or("No window found")?;
+    let resp_value = wasm_bindgen_futures::JsFuture::from(window.fetch_with_request(&request))
+        .await
+        .map_err(|e| format!("Failed to fetch: {:?}", e))?;
+    
+    let resp: Response = resp_value.dyn_into().map_err(|_| "Response is not a Response")?;
+    
+    if !resp.ok() {
+        return Err(format!("HTTP error: {}", resp.status()));
     }
     
-    response
-        .json::<Vec<Product>>()
-        .await
-        .map_err(|e| format!("Failed to parse JSON: {}", e))
+    let json = wasm_bindgen_futures::JsFuture::from(
+        resp.json().map_err(|e| format!("Failed to get JSON: {:?}", e))?
+    )
+    .await
+    .map_err(|e| format!("Failed to parse JSON: {:?}", e))?;
+    
+    serde_wasm_bindgen::from_value(json)
+        .map_err(|e| format!("Failed to deserialize: {}", e))
 }
 
 pub async fn fetch_product_details(id: u32) -> Result<ProductDetails, String> {
     let url = format!("{}products/id/{}", BASE_URL, id);
     
-    let response = Request::get(&url)
-        .header("apikey", API_KEY)
-        .send()
-        .await
-        .map_err(|e| format!("Failed to fetch product details: {}", e))?;
+    let opts = RequestInit::new();
+    opts.set_method("GET");
+    opts.set_mode(RequestMode::Cors);
     
-    if !response.ok() {
-        return Err(format!("HTTP error: {}", response.status()));
+    let request = Request::new_with_str_and_init(&url, &opts)
+        .map_err(|e| format!("Failed to create request: {:?}", e))?;
+    
+    request
+        .headers()
+        .set("apikey", API_KEY)
+        .map_err(|e| format!("Failed to set header: {:?}", e))?;
+    
+    let window = web_sys::window().ok_or("No window found")?;
+    let resp_value = wasm_bindgen_futures::JsFuture::from(window.fetch_with_request(&request))
+        .await
+        .map_err(|e| format!("Failed to fetch: {:?}", e))?;
+    
+    let resp: Response = resp_value.dyn_into().map_err(|_| "Response is not a Response")?;
+    
+    if !resp.ok() {
+        return Err(format!("HTTP error: {}", resp.status()));
     }
     
-    let products: Vec<ProductDetails> = response
-        .json()
-        .await
-        .map_err(|e| format!("Failed to parse JSON: {}", e))?;
+    let json = wasm_bindgen_futures::JsFuture::from(
+        resp.json().map_err(|e| format!("Failed to get JSON: {:?}", e))?
+    )
+    .await
+    .map_err(|e| format!("Failed to parse JSON: {:?}", e))?;
+    
+    let products: Vec<ProductDetails> = serde_wasm_bindgen::from_value(json)
+        .map_err(|e| format!("Failed to deserialize: {}", e))?;
     
     products.into_iter()
         .next()
