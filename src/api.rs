@@ -1,8 +1,8 @@
 use crate::models::{Product, ProductDetails, User};
 use gloo_net::http::Request;
 
-const API_KEY: &str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJud2R4ZHVqZ3pyemd0Zmt5c215Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjYyMjUxMDIsImV4cCI6MjA0MTgwMTEwMn0.D0nuB2PYrkIVuIsz3R2JqJLJYHmr8gXChAiZrTGMiHk";
-const BASE_URL: &str = "https://bnwdxdujgzrzgtfkysmy.supabase.co/rest/v1/";
+const API_KEY: &str = "";
+const BASE_URL: &str = "https://superm-api.porrapat.com/";
 
 pub async fn fetch_products() -> Result<Vec<Product>, String> {
     let url = format!("{}products-list", BASE_URL);
@@ -24,7 +24,7 @@ pub async fn fetch_products() -> Result<Vec<Product>, String> {
 }
 
 pub async fn fetch_product_details(id: u32) -> Result<ProductDetails, String> {
-    let url = format!("{}products?id=eq.{}", BASE_URL, id);
+    let url = format!("{}products/id/{}", BASE_URL, id);
     
     let response = Request::get(&url)
         .header("apikey", API_KEY)
