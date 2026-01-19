@@ -117,6 +117,18 @@ dist/
 
 ---
 
+## AI Tools Used
+
+I use multiple AI tools:
+
+- **ChatGPT**  
+  Used for ideas, inspiration, conceptual discussions.
+
+- **Claude (via OpenRouter, VSCode + Cline)**  
+  Used as the primary coding assistant for drafting and refining Rust code.
+
+---
+
 ## 👤 Author
 
 **Porrapat Petchdamrongskul**
